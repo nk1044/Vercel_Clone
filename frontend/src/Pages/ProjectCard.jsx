@@ -42,7 +42,7 @@ function ProjectCard({ project }) {
           className={`${project?.status === "Completed" ? "cursor-pointer" : "cursor-not-allowed"} bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-300`}
           disabled={project?.status !== "Completed"}>
           <a
-            href={`http://${deploymentUri}/${project?.name}`}
+            href={`http://${project?.name}.${deploymentUri}`}
             target="_blank"
             rel="noopener noreferrer"
           >

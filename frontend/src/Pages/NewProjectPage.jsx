@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CreateProject, GetProjects, getProjectStatus } from '../Server/Server.js';
+import { CreateProject, GetProjects, getProjectStatus, StartDeployment } from '../Server/Server.js';
 import { useUser } from '../Store/zustand.js';
 
 function NewProjectPage() {
@@ -9,7 +9,8 @@ function NewProjectPage() {
   const [newPr, setNewPr] = useState(false);
   const [PrCompleted, setPrCompleted] = useState(false);
   const [status, setStatus] = useState("Pending");
-
+  const [newProjectId, setnewProjectId] = useState("");
+  const deploymentUri = String(import.meta.env.VITE_DEPLOYMENT_URI);
 
 
   const fetchProjects = async () => {
@@ -56,6 +57,8 @@ function NewProjectPage() {
     try {
       const project = { gitUrl, projectId };
       const newProject = await CreateProject(project);
+      setnewProjectId(newProject.name);
+      StartDeployment();
       if (newProject) {
         console.log("Project created in page: ", newProject);
         setNewPr(true);
@@ -76,16 +79,31 @@ function NewProjectPage() {
           <div className="flex flex-col gap-4">
             <h1 className="text-2xl font-bold mb-4 text-center text-blue-600">Project Created</h1>
             {PrCompleted ? (
-              <button
-                className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-5 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-300"
-                onClick={() => {
-                  setNewPr(false);
-                  setPrCompleted(false);
-                  setStatus("Pending");
-                }}
-              >
-                Create New Project
-              </button>
+              <div className='flex flex-col gap-4 w-full'>
+                <button
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+                >
+                  <a
+                  href={`http://${newProjectId}.${deploymentUri}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View Project
+                </a>
+                </button>
+
+                <button
+                  className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-5 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  onClick={() => {
+                    setNewPr(false);
+                    setPrCompleted(false);
+                    setStatus("Pending");
+                  }}
+                >
+                  Create New Project
+                </button>
+
+              </div>
             ) : (
               <div className="flex justify-center items-center gap-4 font-semibold text-lg">
                 <span>Status: {status}</span>

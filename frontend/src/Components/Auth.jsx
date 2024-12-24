@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../Store/zustand.js';
 import Loader from './Loader.jsx';
-import { GetCurrentUser } from '../Server/Server.js';
+import { GetCurrentUser , UpdateTokens} from '../Server/Server.js';
 
 export default function Auth({ children }) {
     const navigate = useNavigate();
@@ -12,7 +12,11 @@ export default function Auth({ children }) {
 
     const checkUser = async () => {
         try {
-            const CurrentUser = await GetCurrentUser();
+            let CurrentUser = await GetCurrentUser();
+            if(!CurrentUser) {
+                await UpdateTokens();
+                CurrentUser = await GetCurrentUser();
+            }
             if(CurrentUser._id !== User?._id) {
                 setUser(null);
                 console.log(User?._id);
@@ -21,6 +25,7 @@ export default function Auth({ children }) {
                 console.log("User not found in database in Auth.jsx");
                 navigate("/login");
             }
+
             // console.log("user in auth.jsx: ", CurrentUser);
             return CurrentUser || null;
         } catch (error) {

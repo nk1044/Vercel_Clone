@@ -2,12 +2,13 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 const backend_url = String(import.meta.env.VITE_BACKEND_URI);
+const deplyment_url = String(import.meta.env.VITE_DEPLOYMENT_URI);
 
 
 const LoginUser = async function(user) {
     try {
         const LoggedInUser = await axios.post(`${backend_url}/user/login-user`, {...user}, {withCredentials: true});
-        console.log(LoggedInUser);
+        // console.log(LoggedInUser);
         return LoggedInUser.data.user;
     } catch (error) {
         console.log("Failed to log in user: ", error);
@@ -94,6 +95,25 @@ const getProjectStatus = async function(projectId) {
     }
 }
 
+const StartDeployment = async function() {
+    try {
+        const status = await axios.get(`${deplyment_url}/health-check`);
+        // console.log("status in server: ", status.data.status);
+        console.log("Deployment started");
+    } catch (error) {
+        console.log("Failed to get project status in server.js: ", error);
+    }
+}
+const StartApibackend = async function() {
+    try {
+        const status = await axios.get(`${backend_url}/health-check`);
+        // console.log("status in server: ", status.data.status);
+        console.log("Backend server status:", status.data);
+    } catch (error) {
+        console.log("Failed to get project status in server.js: ", error);
+    }
+}
+
 export {
     LoginUser,
     RegisterUser,
@@ -102,5 +122,7 @@ export {
     UpdateTokens,
     GetProjects,
     CreateProject,
-    getProjectStatus
+    getProjectStatus,
+    StartDeployment,
+    StartApibackend
 }

@@ -12,7 +12,7 @@ function Project_SubPage() {
     const fetchProjects = async () => {
       try {
         const projects = await GetProjects();
-        console.log("all projects: ", projects);
+        // console.log("all projects: ", projects);
         if (projects) {
           const sortedProjects = [...projects].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
           setProjectUrls(sortedProjects);

@@ -28,6 +28,7 @@ app.use(cors({
 
 app.use('/api/v1/user', UserRouter);
 app.use('/api/v1/project', ProjectRouter);
+app.get('/api/v1/health-check', (req, res) => res.send('ok'));
 
 
 export default app;

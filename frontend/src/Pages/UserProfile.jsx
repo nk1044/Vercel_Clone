@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import Project_SubPage from './Project_SubPage';
 import NewProjectPage from './NewProjectPage';
-import { logoutUser } from '../Server/Server.js';
+import { logoutUser , StartApibackend} from '../Server/Server.js';
 import { useUser } from '../Store/zustand.js';
 import { useNavigate } from 'react-router-dom';
+
 
 function UserProfile() {
   const [Right, setRight] = useState('Project');
   const user = useUser((state) => state.user);
   const setUser = useUser((state) => state.setUser);
   const setProjectUrls = useUser((state) => state.setProjectUrls);
+  const [log_out_status, setlog_out_status] = useState('Logout')
   const navigate = useNavigate();
 
   const logout = async () => {
     try {
+      setlog_out_status('Logging Out...')
       await logoutUser();
       setUser(null);
       localStorage.removeItem('userStore');
@@ -23,6 +26,7 @@ function UserProfile() {
       console.log('Failed to logout user in UserProfile: ', error);
     }
   };
+
 
   return (
     <div className="bg-gray-100 w-full min-h-screen">
@@ -44,7 +48,7 @@ function UserProfile() {
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md"
             onClick={logout}
           >
-            LogOut
+            {log_out_status}
           </button>
         </div>
       </div>

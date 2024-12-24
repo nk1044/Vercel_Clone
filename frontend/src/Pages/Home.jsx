@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
+import {StartApibackend} from '../Server/Server.js'
 
 
 function Home() {
   const navigate = useNavigate();
   useEffect(() => {
     localStorage.removeItem('userStore');
+    StartApibackend();
   }, [])
 
   return (
