@@ -109,6 +109,7 @@ const StartApibackend = async function() {
         const status = await axios.get(`${backend_url}/health-check`);
         // console.log("status in server: ", status.data.status);
         console.log("Backend server status:", status.data);
+        return status.data;
     } catch (error) {
         console.log("Failed to get project status in server.js: ", error);
     }

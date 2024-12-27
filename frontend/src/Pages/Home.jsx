@@ -5,10 +5,19 @@ import {StartApibackend} from '../Server/Server.js'
 
 function Home() {
   const navigate = useNavigate();
+  const [status, setStatus] = useState('Connecting to server...');
   useEffect(() => {
     localStorage.removeItem('userStore');
-    StartApibackend();
+    if(status === 'Connecting to server...'){
+      StartApibackend().then((res) => {
+        if(res){
+          setStatus('Start Deploying')
+        }
+      })
+    }
   }, [])
+
+
 
   return (
     <div className='bg-gray-200 w-full h-[100vh]'>
@@ -42,8 +51,9 @@ function Home() {
         <div>
           <button className='text-3xl font-bold border-2 bg-gray-300 px-5 py-2 rounded-2xl'
             onClick={() => navigate('/login')}
+            disabled={status !== 'Start Deploying'}
           >
-            Start Deploying
+            {status}
           </button>
         </div>
 
