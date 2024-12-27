@@ -27,6 +27,12 @@ function Register() {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(localUser?.email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
       const registeredUser = await RegisterUser(localUser);
       // console.log("registered User: ", registeredUser);
       setZustandUser(registeredUser);

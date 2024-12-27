@@ -23,10 +23,10 @@ function Login() {
       return;
     }
 
-    // if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userDetails.email)) {
-    //   alert('Please enter a valid email address.');
-    //   return;
-    // }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userDetails.email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
 
     try {
       setLoading(true);

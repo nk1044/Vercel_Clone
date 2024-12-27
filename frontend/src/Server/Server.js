@@ -2,7 +2,8 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 const backend_url = String(import.meta.env.VITE_BACKEND_URI);
-const deplyment_url = String(import.meta.env.VITE_DEPLOYMENT_URI);
+const deplyment_url = 'http://'+String(import.meta.env.VITE_DEPLOYMENT_URI);
+const builder_url = String(import.meta.env.VITE_BUILDER_URI);
 
 
 const LoginUser = async function(user) {
@@ -19,7 +20,7 @@ const LoginUser = async function(user) {
 const RegisterUser = async function(user) {
     try {
         const RegisteredUser = await axios.post(`${backend_url}/user/register-user`, {...user}, {withCredentials: true});
-        console.log(RegisteredUser);
+        // console.log(RegisteredUser);
         return RegisteredUser.data.user;
     } catch (error) {
         console.log("Failed to register user in server.js: ", error);
@@ -100,8 +101,9 @@ const StartDeployment = async function() {
         const status = await axios.get(`${deplyment_url}/health-check`);
         // console.log("status in server: ", status.data.status);
         console.log("Deployment started");
+        return status.data?.message;
     } catch (error) {
-        console.log("Failed to get project status in server.js: ", error);
+        console.log("Failed to start Deployment server in server.js: ", error);
     }
 }
 const StartApibackend = async function() {
@@ -111,7 +113,17 @@ const StartApibackend = async function() {
         console.log("Backend server status:", status.data);
         return status.data;
     } catch (error) {
-        console.log("Failed to get project status in server.js: ", error);
+        console.log("Failed to start Api server in server.js: ", error);
+    }
+}
+const StartBuildbackend = async function() {
+    // console.log(builder_url);
+    try {
+        
+        const status = await axios.get(`${builder_url}/health-check`);
+        console.log("Builder server status:", status.data);
+    } catch (error) {
+        console.log("Failed to start Builder server in server.js: ", error);
     }
 }
 
@@ -125,5 +137,6 @@ export {
     CreateProject,
     getProjectStatus,
     StartDeployment,
-    StartApibackend
+    StartApibackend,
+    StartBuildbackend
 }

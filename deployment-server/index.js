@@ -3,7 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 import path from 'path';
 import fs from 'fs';
 import mime from 'mime-types';
-import 'dotenv/config'
+import 'dotenv/config';
+import cors from 'cors';
 
 
 const app = express();
@@ -14,6 +15,19 @@ const supabase_key = String(process.env.SUPABASE_KEY)
 const supabase = createClient(supabase_url, supabase_key);
 
 app.use('/static', express.static('output'));
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || origin.includes('localhost')) return callback(null, true);
+
+        const allowedOrigins = [
+            /^https?:\/\/.*\.netlify\.app$/,
+            /^https?:\/\/.*\.vercel\.app$/ 
+        ];
+        if (allowedOrigins.some(regex => regex.test(origin))) return callback(null, true);
+        callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true
+}));
 
 async function checkAndDownloadFolder(ProjectId) {
     const projectDir = path.resolve('./output', ProjectId);
@@ -39,7 +53,7 @@ app.get('/*', async (req, res) => {
             await deleteFolder(path.resolve(`./output/${ProjectId}`));
         }
 
-        if(ProjectId==="health"){
+        if(filePath==="/health-check"){
             return res.send('Server is healthy.');
         }
 

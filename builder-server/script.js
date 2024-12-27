@@ -5,10 +5,24 @@ import fs from 'fs';
 import 'dotenv/config'
 import { uploadFile } from './upload_file.js';
 import Redis from "ioredis";
-import mime from 'mime-types';
+import cors from 'cors'
 
 const  app = express();
 const port = process.env.PORT || 5000;
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || origin.includes('localhost')) return callback(null, true);
+
+        const allowedOrigins = [
+            /^https?:\/\/.*\.netlify\.app$/,
+            /^https?:\/\/.*\.vercel\.app$/ 
+        ];
+        if (allowedOrigins.some(regex => regex.test(origin))) return callback(null, true);
+        callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true
+}));
 
 app.get('/*', (req, res) => {
     res.send('Builder server running successfully');
@@ -151,6 +165,6 @@ async function publishMessage(message) {
 
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server V2 is running on port ${port}`);
     PopFromQueue();
 });

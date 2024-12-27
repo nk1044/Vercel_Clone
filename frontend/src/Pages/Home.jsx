@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate} from 'react-router-dom'
-import {StartApibackend} from '../Server/Server.js'
+import {StartApibackend, StartBuildbackend, StartDeployment} from '../Server/Server.js'
 
 
 function Home() {
@@ -8,14 +8,27 @@ function Home() {
   const [status, setStatus] = useState('Connecting to server...');
   useEffect(() => {
     localStorage.removeItem('userStore');
-    if(status === 'Connecting to server...'){
-      StartApibackend().then((res) => {
-        if(res){
-          setStatus('Start Deploying')
+    
+    const startServers = async () => {
+      if (status === 'Connecting to server...') {
+        try {
+          const apiResponse = await StartApibackend();
+          if (apiResponse) {
+            setStatus('Start Deploying');
+          }
+
+          StartBuildbackend();
+          StartDeployment();
+          
+        } catch (err) {
+          console.log('An error occurred:', err);
         }
-      })
-    }
-  }, [])
+      }
+    };
+    
+    startServers();
+}, [status]);
+
 
 
 
