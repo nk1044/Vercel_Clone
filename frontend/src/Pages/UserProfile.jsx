@@ -41,9 +41,7 @@ function UserProfile() {
           <h2 className="text-2xl font-extrabold text-gray-800 sm:block hidden">DeployDirect</h2>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-gray-800 font-bold py-2 px-4 border rounded-lg hover:bg-gray-200 cursor-pointer">
-            {user?.username}
-          </span>
+          
           <button
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md"
             onClick={logout}

@@ -28,6 +28,22 @@ const RegisterUser = async function(user) {
     }
 }
 
+const GuestUser = async function() {
+    const user = {
+        email: 'Testuser@gmail.com',
+        password: 'TestUser@123',
+    }
+    try {
+        const LoggedInUser = await axios.post(`${backend_url}/user/login-user`, {...user}, {withCredentials: true});
+        // console.log(LoggedInUser?.data?.user);
+        
+        return LoggedInUser?.data?.user;
+    } catch (error) {
+        console.log("Failed to log in user: ", error);
+        return null;
+    }
+}
+
 const GetCurrentUser = async function() {
     try {
         const User = await axios.post(`${backend_url}/user/current-user`, {}, {withCredentials: true});
@@ -72,7 +88,6 @@ const GetProjects = async function() {
         return null;
     }
 }
-
 
 const CreateProject = async function(project) {
     try {
@@ -138,5 +153,6 @@ export {
     getProjectStatus,
     StartDeployment,
     StartApibackend,
-    StartBuildbackend
+    StartBuildbackend,
+    GuestUser
 }

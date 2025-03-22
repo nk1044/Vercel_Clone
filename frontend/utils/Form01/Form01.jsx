@@ -1,61 +1,26 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { RegisterUser, GuestUser } from '../Server/Server.js';
-import { useUser } from '../Store/zustand.js';
 
-function Register() {
-  const navigate = useNavigate();
+const Form01 = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const setZustandUser = useUser(state => state.setUser);
-
-  const [localUser, setLocalUser] = useState({
-    username: '',
+  const [formData, setFormData] = useState({
+    fullName: '',
     email: '',
     password: '',
+    rememberMe: false
   });
-  const [error, setError] = useState('');
 
-  const navigateToPage = () => {
-    const user = useUser.getState().user;
-    if (user?._id) {
-      navigate('/user-profile');
-    } else {
-      console.log("User not found in store in register.jsx");
-      // navigate('/login');
-    }
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(localUser?.email)) {
-        alert('Please enter a valid email address.');
-        return;
-      }
-
-      const registeredUser = await RegisterUser(localUser);
-      // console.log("registered User: ", registeredUser);
-      setZustandUser(registeredUser);
-      navigateToPage();
-    } catch (error) {
-      console.log("Failed to register user: ", error);
-      setError('Failed to register. Please try again.');
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
   };
-
-  const handleGuestUser = async () => {
-    try {
-      const response = await GuestUser();
-      if(response) {
-        setZustandUser(response);
-        navigateToPage();
-      }
-    } catch (error) {
-      console.log("Failed to login as guest user: ", error);
-      setError('Failed to login as guest user. Please try again.');
-    }
-  }
 
   return (
     <div className="flex w-full items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 p-4 sm:p-6 lg:p-8">
@@ -65,7 +30,6 @@ function Register() {
           <div className="text-center space-y-2">
             <h2 className="text-3xl font-bold text-gray-800">Create Account</h2>
             <p className="text-gray-500">Join us and start your journey</p>
-            {error && <p className="text-red-500">{error}</p>}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -73,14 +37,16 @@ function Register() {
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Full Name</label>
               <div className="relative">
-                
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  👤
+                </span>
                 <input
                   type="text"
                   name="fullName"
-                  value={localUser.username}
-                  onChange={(e) => setLocalUser(prev => ({ ...prev, username: e.target.value }))}
+                  value={formData.fullName}
+                  onChange={handleInputChange}
                   placeholder="John Doe"
-                  className="w-full pl-2 pr-4 py-2.5 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
                 />
               </div>
             </div>
@@ -89,14 +55,16 @@ function Register() {
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Email</label>
               <div className="relative">
-               
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  ✉️
+                </span>
                 <input
                   type="email"
                   name="email"
-                  // value={formData.email}
-                  onChange={(e) => setLocalUser(prev => ({ ...prev, email: e.target.value }))}
+                  value={formData.email}
+                  onChange={handleInputChange}
                   placeholder="example@email.com"
-                  className="w-full pl-2 pr-4 py-2.5 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
                 />
               </div>
             </div>
@@ -105,14 +73,16 @@ function Register() {
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Password</label>
               <div className="relative">
-                
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  🔒
+                </span>
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
-                  
-                  onChange={(e) => setLocalUser(prev => ({ ...prev, password: e.target.value }))}
+                  value={formData.password}
+                  onChange={handleInputChange}
                   placeholder="••••••••"
-                  className="w-full pl-2 pr-12 py-2.5 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-12 py-2.5 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
                 />
                 <button
                   type="button"
@@ -124,7 +94,26 @@ function Register() {
               </div>
             </div>
 
-            
+            {/* Remember Me & Forgot Password */}
+            <div className="flex items-center justify-between">
+              <label className="flex items-center space-x-2 text-sm text-gray-600">
+                <input
+                  type="checkbox"
+                  name="rememberMe"
+                  checked={formData.rememberMe}
+                  onChange={handleInputChange}
+                  className="w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-400"
+                />
+                <span>Remember me</span>
+              </label>
+              <button 
+                type="button" 
+                className="text-sm text-blue-500 hover:text-blue-600 hover:underline"
+              >
+                Forgot Password?
+              </button>
+            </div>
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -143,21 +132,20 @@ function Register() {
               </div>
             </div>
 
+            {/* Social Login Button */}
             <button
               type="button"
               className="w-full py-3 px-4 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-all duration-200 flex items-center justify-center space-x-2"
-              onClick={handleGuestUser}
             >
-              <span>Sign up as a Guest user</span>
+              <span className="mr-2">G</span>
+              <span>Sign up with Google</span>
             </button>
           </form>
 
           {/* Login Link */}
           <p className="text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <button className="text-blue-500 hover:text-blue-600 font-medium hover:underline focus:outline-none"
-              onClick={() => navigate('/login')}
-            >
+            <button className="text-blue-500 hover:text-blue-600 font-medium hover:underline focus:outline-none">
               Log in
             </button>
           </p>
@@ -165,6 +153,6 @@ function Register() {
       </div>
     </div>
   );
-}
+};
 
-export default Register;
+export default Form01;
