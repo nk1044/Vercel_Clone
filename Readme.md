@@ -73,9 +73,9 @@ This project consists of three servers:
 
 ### Clone the Repository:
 ```
-git clone https://github.com/your-repo/vercel-clone.git
+git clone https://github.com/nk1044/Vercel_Clone.git
 
-cd vercel-clone
+cd Vercel_Clone
 ```
 ### Set Up Environment Variables:
 Create a .env file with the required configuration:
@@ -91,7 +91,7 @@ Create a .env file with the required configuration:
 
 ### Access the Application:
 
-Open your browser and go to http://localhost:3000.
+Open your browser and go to http://localhost:5173.
 
 ### Build Process:
 
