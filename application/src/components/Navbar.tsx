@@ -19,7 +19,7 @@ function Navbar() {
             <div className='flex items-center gap-4'>
                 {/* heading and nav links */}
                 <div className='flex items-center gap-1 ml-6 cursor-pointer'
-                onClick={() => router.replace('/')}>
+                onClick={() => router.push('/')}>
                     <img src="/logo.png" alt="logo" className='w-6 h-6 hover:spin-once' />
                     <h1 className='text-2xl font-semibold '>Deploy</h1>
                 </div>
@@ -46,7 +46,7 @@ function Navbar() {
                             onClick={() => signOut()}>
                             Logout
                         </button>
-                        <button className='w-7 h-7 border border-neutral-800 rounded-full overflow-hidden flex items-center justify-center cursor-pointer hover:scale-105 transition-transform'>
+                        <button className='w-7 h-7 border border-neutral-600 rounded-full overflow-hidden flex items-center justify-center cursor-pointer hover:scale-105 transition-transform'>
                             <img src={session.user?.image as string} alt="logo" />
                         </button>
                     </div>

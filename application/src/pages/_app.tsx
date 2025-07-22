@@ -6,9 +6,9 @@ import Layout from "@/components/Layout";
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <Layout>
+      {/* <Layout> */}
         <Component {...pageProps} />
-      </Layout>
+      {/* </Layout> */}
     </SessionProvider>
   );
 }
