@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+@keyframes spin-once {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hover\:spin-once:hover {
+  animation: spin-once 1.5s ease-in-out;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

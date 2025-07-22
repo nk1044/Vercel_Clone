@@ -12,7 +12,7 @@ function Index() {
           <p className="text-lg text-neutral-600 mb-8">You are now logged in.</p>
           <button
             onClick={() => signOut()}
-            className="px-6 py-3 bg-gray-100 rounded-md text-lg font-semibold hover:bg-gray-300 transition hover:scale-105 active:scale-100"
+            className="px-6 py-2 bg-gray-100 text-black cursor-pointer rounded-md text-lg font-semibold hover:bg-gray-200 transition hover:scale-105 active:scale-100"
           >
             Sign Out
           </button>
