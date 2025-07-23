@@ -1,18 +1,21 @@
+// lib/withAuth.ts
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
 
-export default async (req:NextApiRequest, res:NextApiResponse) => {
-  const session = await getServerSession(req, res, authOptions)
+export function withAuth(handler: NextApiHandler) {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const session = await getServerSession(req, res, authOptions);
 
-  if (session) {
-    res.send({
-      content:
-        "This is protected content. You can access this content because you are signed in.",
-    })
-  } else {
-    res.send({
-      error: "You must be signed in to view the protected content on this page.",
-    })
-  }
+    if (!session) {
+      return res.status(401).json({
+        error: "You must be signed in to access this resource.",
+      });
+    }
+
+    // @ts-ignore - pass session to handler if needed
+    req.session = session;
+    
+    return handler(req, res);
+  };
 }

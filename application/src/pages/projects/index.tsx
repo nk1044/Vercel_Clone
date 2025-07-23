@@ -1,57 +1,162 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import ProjectLayout from "@/components/Layout";
 import { showToast } from "@/components/tools/toast";
+import axios from 'axios';
+import { useSession } from "next-auth/react";
 
-function page() {
+function ProjectsPage() {
     const router = useRouter();
+    const { data: session, status } = useSession();
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [projects, setProjects] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            router.replace('/auth');
+        }
+    }, [status, router]);
+    useEffect(() => {
+        if (status !== 'authenticated') return;
+        const fetchProjects = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.get('/api/projects');
+                const data = await response.data;
+
+                if (!response.status || !data.projects) {
+                    throw new Error('Failed to fetch projects');
+                }
+
+                setProjects(data.projects);
+                showToast('✅ Projects fetched successfully!');
+            } catch (err) {
+                const msg = err instanceof Error ? err.message : 'An unexpected error occurred';
+                setError(msg);
+                showToast(`❌ ${msg}`);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProjects();
+    }, [status]);
+
+    const formatDate = (dateString: string) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    };
+
+    // Show loading while checking session
+    if (status === 'loading') {
+        return (
+            <div className="min-h-screen flex items-center justify-center text-white">
+                Checking authentication...
+            </div>
+        );
+    }
 
     return (
-        <>
-        <ProjectLayout >
-        <div className='w-full flex flex-col items-center justify-center p-8'>
-            <div className='max-w-2xl text-center'>
-                <div 
-                    className='mb-8 hover:scale-105 transition-transform cursor-pointer'
-                    onClick={() => router.replace('/')}
-                >
-                    <img src="/logo-main.png" alt="logo" className='w-20 h-20 mx-auto hover:spin-once' />
+        <div className="min-h-screen">
+            <ProjectLayout>
+                <div className="w-full min-h-[90%] p-8">
+                    <div className="flex justify-between items-center mb-8">
+                        <div>
+                            <h1 className="text-3xl font-bold text-white mb-2">Projects</h1>
+                            <p className="text-gray-400">Manage and monitor your deployed projects</p>
+                        </div>
+                        <button
+                            onClick={() => router.push('/projects/newProject')}
+                            className="px-6 py-3 bg-neutral-800 cursor-pointer text-white rounded-lg hover:bg-neutral-700 transition-colors border border-neutral-700"
+                        >
+                            Create New Project
+                        </button>
+                    </div>
+
+                    {loading ? (
+                        <div className="flex justify-center items-center h-64 text-gray-400">
+                            Loading projects...
+                        </div>
+                    ) : error ? (
+                        <div className="flex justify-center items-center h-64 text-red-400">
+                            {error}
+                        </div>
+                    ) : projects.length === 0 ? (
+                        <div className="flex flex-col justify-center items-center h-64 text-gray-400">
+                            <div className="text-xl mb-2">No projects found</div>
+                            <div>Create your first project to get started</div>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {projects.map((project, index) => (
+                                <div
+                                    key={project._id || index}
+                                    className="bg-gray-800 border border-gray-700 rounded-lg p-6 hover:bg-gray-750 transition-colors"
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-6">
+                                                <div className="min-w-0 flex-1">
+                                                    <h3 className="text-xl font-semibold text-white mb-1">
+                                                        {project.name || 'Untitled Project'}
+                                                    </h3>
+                                                    <div className="flex items-center gap-4 text-sm">
+                                                        <a
+                                                            href={`http://${project.name}.localhost:3000`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-gray-300 hover:text-white transition-colors flex items-center gap-1"
+                                                        >
+                                                            🌐 {project.name}.localhost:3000
+                                                        </a>
+                                                        <a
+                                                            href={project.URL}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-gray-300 hover:text-white transition-colors flex items-center gap-1"
+                                                        >
+                                                            📂 GitHub
+                                                        </a>
+                                                        <span className="text-gray-400">
+                                                            Created {formatDate(project.createdAt)}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <span
+                                                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                                            project.status === 'Completed'
+                                                                ? 'bg-green-900 text-green-300'
+                                                                : project.status === 'Failed'
+                                                                ? 'bg-red-900 text-red-300'
+                                                                : project.status === 'Deploying'
+                                                                ? 'bg-yellow-900 text-yellow-300'
+                                                                : project.status === 'Building'
+                                                                ? 'bg-orange-900 text-orange-300'
+                                                                : project.status === 'Downloading'
+                                                                ? 'bg-purple-900 text-purple-300'
+                                                                : 'bg-gray-700 text-gray-300'
+                                                        }`}
+                                                    >
+                                                        {project.status}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-                
-                <h1 className='text-3xl font-bold mb-4'>Projects</h1>
-                <p className='text-lg text-neutral-600 mb-8'>
-                    Our Project Page is currently under construction.
-                </p>
-
-                <div className='w-16 h-1 bg-neutral-200 mx-auto mb-8'></div>
-
-                <div className='space-y-4 mb-8'>
-                    <p className='text-neutral-600'>
-                        We're working hard to bring you comprehensive documentation.
-                    </p>
-                    <p className='text-neutral-600'>
-                        Please check back soon for updates.
-                    </p>
-                </div>
-
-                <button
-                    onClick={() => router.replace('/')}
-                    className='px-6 py-2 bg-black text-white rounded-md hover:bg-neutral-800 transition'
-                >
-                    Return to Dashboard
-                </button>
-                <button
-                    onClick={() => showToast('This feature is under construction.')}
-                    className='px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition ml-4'
-                >
-                    Show Toast
-                </button>
-            </div>
+            </ProjectLayout>
         </div>
-        </ProjectLayout>
-        </>
-    )
+    );
 }
 
-
-export default page;
+export default ProjectsPage;

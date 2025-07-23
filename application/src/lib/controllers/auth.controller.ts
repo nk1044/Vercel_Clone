@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { User } from "../models/user.model";
 
 const loginUser = async (email: string, name: string, avatar:string) => {

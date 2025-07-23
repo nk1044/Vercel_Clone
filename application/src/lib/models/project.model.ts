@@ -1,4 +1,4 @@
-import {model, Schema} from "mongoose";
+import {model, models, Schema} from "mongoose";
 
 const ProjectSchema = new Schema({
     URL: {
@@ -19,6 +19,12 @@ const ProjectSchema = new Schema({
         enum: ["Pending", "Downloading", "Building", "Deploying", "Completed", "Failed"]
     }
 }, {timestamps: true});
+
+if(process.env.MODE === "development") {
+    if (models.Project) {
+        delete models.Project;
+    }
+}
 
 export const Project = model("Project", ProjectSchema);
 

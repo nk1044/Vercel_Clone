@@ -5,10 +5,10 @@ import { Toaster } from "react-hot-toast";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       <Toaster />
-      <main>{children}</main>
+      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );
