@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import { Terminal } from 'lucide-react';
@@ -79,7 +78,7 @@ export default function Home() {
             <div className="flex flex-col lg:flex-row justify-between items-center gap-y-12 gap-x-12 w-full">
 
               {/* Text Block */}
-              <div className="w-full md:w-1/2 flex flex-col items-start text-left px-2 sm:px-4">
+              <div className="w-full md:w-1/2 ml-4 flex flex-col items-start text-left px-2 sm:px-4">
                 <div className="flex items-center text-neutral-500 text-sm font-mono mb-3">
                   <Terminal className="mr-2 text-neutral-600" />
                   Git-connected Deploys

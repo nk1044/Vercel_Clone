@@ -65,7 +65,7 @@ function NewProjectPage() {
             </div>
 
             {/* Form Card */}
-            <div className="bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 bg-opacity-80 border border-neutral-700 rounded-2xl p-10 shadow-2xl backdrop-blur-sm">
+            <div className="bg-gradient-to-br from-neutral-950 via-neutral-800 to-neutral-950 bg-opacity-80 border border-neutral-800 rounded-2xl p-10 shadow-2xl backdrop-blur-sm">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Git URL Input */}
                 <div className="space-y-2">
