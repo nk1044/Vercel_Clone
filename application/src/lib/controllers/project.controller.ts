@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Project } from "../models/project.model";
 import { User } from "../models/user.model";
 import { Redis } from "ioredis";
@@ -9,25 +10,30 @@ const subscriber = new Redis(process.env.REDIS_URI as string);
 
 const createProject = async (gitUrl: string, UserId: string, projectId: string) => {
     const user = await User.findById(UserId);
+    if (!user) {
+        throw new Error("User not found");
+    }
     const project = await Project.create({
         URL: gitUrl,
         name: projectId,
         Owner: user,
         status: "Downloading"
     });
-    await project.save({ validateBeforeSave: false });
+    console.log("Project created:", project);
     return project;
 }
 
 async function PushInQueue(data: IData) {
-    await redis.lpush("user-list", JSON.stringify(data));
-    console.log("Data pushed in queue:", data);
+    // await redis.lpush("user-list", JSON.stringify(data));
+    // console.log("Data pushed in queue:", data);
 
-    const result = await redis.brpop("user-list", 0);
-    if (result) {
-        const [queueName, value] = result;
-        console.log("Data popped from queue:", value);
-    }
+    // const result = await redis.brpop("user-list", 0);
+    // if (result) {
+    //     const [queueName, value] = result;
+    //     console.log("Data popped from queue:", value);
+    // }
+    console.log("Data to be pushed in queue:", data);
+    
 }
 
 interface IData {
@@ -35,11 +41,25 @@ interface IData {
     projectId?: string;
 }
 
+function isValidGitHubUrl(url: string): boolean {
+  const githubRepoRegex = /^https:\/\/github\.com\/[\w-]+\/[\w.-]+\/?$/;
+  return githubRepoRegex.test(url);
+}
+
+
 const CreateProject = async (req: any, res: any) => {
     try {
         const { gitUrl, projectId } = req.body;
-        const projectID = projectId ? projectId : uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] });
-
+        const projectID = projectId ? projectId.toString().trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_') : uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] });
+        
+        console.log("Project ID:", projectID);
+        
+        if (!gitUrl || !projectID || gitUrl.trim() === '' || projectID.trim() === '') {
+            return res.status(400).json({ error: "Git URL and Project ID are required" });
+        }
+        if (!isValidGitHubUrl(gitUrl)) {
+            return res.status(400).json({ error: "Invalid GitHub URL" });
+        }
         const email = req.session?.user?.email;
         if (!email) {
             return res.status(401).json({ error: "Unauthorized" });
@@ -51,7 +71,7 @@ const CreateProject = async (req: any, res: any) => {
 
         const data = {
             gitUrl,
-            projectId
+            projectID
         } as IData;
 
         await PushInQueue(data);
@@ -116,13 +136,21 @@ const GetAllProjects = async function (req: any, res: any) {
     try {
         const user = req.session?.user;
         if (!user || !user.email) {
+            console.log("Unauthorized access attempt or invalid user ID");
             return res.status(401).send("Unauthorized");
         }
-        const userid = user._id;
+        const fetchedUser = await User.findOne({ email: user.email });
+        if (!fetchedUser) {
+            console.log("User not found:", user.email);
+            return res.status(404).send("User not found");
+        }
+        console.log("Fetching projects for user:", user.email);
+        const userid = fetchedUser._id;
         const projects = await Project.find({ Owner: userid });
         if (!projects) {
             return res.status(400).send("No projects found");
         }
+        console.log("Fetched projects:", projects);
         res.status(200).json({
             projects
         });
