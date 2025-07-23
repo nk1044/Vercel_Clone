@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import { Terminal } from 'lucide-react';
 import TerminalUI from "@/components/tools/terminal";
+import { useRouter } from "next/navigation";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,6 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export default function Home() {
+  const router = useRouter();
   return (
     <>
       <Navbar />
@@ -43,11 +46,12 @@ export default function Home() {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <button className="px-8 py-4 cursor-pointer bg-white text-black rounded-full font-medium text-base hover:bg-gray-100 transition-all duration-200 flex items-center gap-2">
+            <button className="px-8 py-4 cursor-pointer bg-white text-black rounded-full font-medium text-base hover:bg-gray-100 transition-all duration-200 flex items-center gap-2"
+              onClick={() => router.push("/projects")}>
               Start Deploying
             </button>
             <button className="px-8 py-4 cursor-pointer bg-transparent border border-gray-600 rounded-full font-medium text-base hover:bg-neutral-950 hover:border-gray-600 transition-all duration-200"
-              onClick={() => window.location.href = "/docs"}>
+              onClick={() => router.push("/docs")}>
               Read Docs
             </button>
           </div>
@@ -71,49 +75,36 @@ export default function Home() {
         </section>
 
         <section className="row-start-3 w-full mt-2 flex justify-center items-center px-4 sm:px-0">
-  <div className="py-20 px-4 sm:px-0 border-t border-l border-r border-neutral-800 w-full max-w-[91.18%] text-center">
-    <div className="flex flex-col lg:flex-row justify-between items-center gap-y-12 gap-x-12 w-full">
+          <div className="py-20 px-4 sm:px-0 border-t border-l border-r border-neutral-800 w-full max-w-[91.18%] text-center">
+            <div className="flex flex-col lg:flex-row justify-between items-center gap-y-12 gap-x-12 w-full">
 
-      {/* Text Block */}
-      <div className="w-full md:w-1/2 flex flex-col items-start text-left px-2 sm:px-4">
-        <div className="flex items-center text-neutral-500 text-sm font-mono mb-3">
-          <Terminal className="mr-2 text-neutral-600" />
-          Git-connected Deploys
-        </div>
+              {/* Text Block */}
+              <div className="w-full md:w-1/2 flex flex-col items-start text-left px-2 sm:px-4">
+                <div className="flex items-center text-neutral-500 text-sm font-mono mb-3">
+                  <Terminal className="mr-2 text-neutral-600" />
+                  Git-connected Deploys
+                </div>
 
-        <h2 className="text-xl sm:text-2xl font-bold text-neutral-100 leading-tight">
-          From localhost to https, in seconds.
-        </h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-neutral-100 leading-tight">
+                  From localhost to https, in seconds.
+                </h2>
 
-        <p className="text-neutral-400 text-base sm:text-md">
-          Deploy directly from any Git URL — zero config, full speed.
-        </p>
-      </div>
+                <p className="text-neutral-400 text-base sm:text-md">
+                  Deploy directly from any Git URL — zero config, full speed.
+                </p>
+              </div>
 
-      {/* Terminal UI */}
-      <div className="w-full lg:w-1/2 flex justify-center items-center">
-        <TerminalUI />
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
+              {/* Terminal UI */}
+              <div className="w-full lg:w-1/2 flex justify-center items-center">
+                <TerminalUI />
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Footer */}
         <footer className="row-start-4 w-full border-t border-neutral-800 text-gray-400 py-6 px-4 sm:px-8">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
-
-            {/* Left Side */}
-            <p>© 2025 Deployment Server.</p>
-
-            {/* Right Side - Add links or socials if needed */}
-            <div className="flex gap-4">
-              <a href="/docs" className="hover:text-white transition">Docs</a>
-              <a href="https://github.com/nk1044/Vercel_Clone" target="_blank" className="hover:text-white transition">GitHub</a>
-            </div>
-          </div>
+          <Footer />
         </footer>
 
       </div>

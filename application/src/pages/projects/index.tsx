@@ -1,11 +1,15 @@
 import React from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import ProjectLayout from "@/components/Layout";
+import { showToast } from "@/components/tools/toast";
 
-function Docs() {
-    const router = useRouter()
+function page() {
+    const router = useRouter();
 
     return (
-        <div className='w-full min-h-screen flex flex-col items-center justify-center p-8'>
+        <>
+        <ProjectLayout >
+        <div className='w-full flex flex-col items-center justify-center p-8'>
             <div className='max-w-2xl text-center'>
                 <div 
                     className='mb-8 hover:scale-105 transition-transform cursor-pointer'
@@ -36,9 +40,18 @@ function Docs() {
                 >
                     Return to Dashboard
                 </button>
+                <button
+                    onClick={() => showToast('This feature is under construction.')}
+                    className='px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition ml-4'
+                >
+                    Show Toast
+                </button>
             </div>
         </div>
+        </ProjectLayout>
+        </>
     )
 }
 
-export default Docs
+
+export default page;
