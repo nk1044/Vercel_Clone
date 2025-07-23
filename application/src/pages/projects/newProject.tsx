@@ -31,7 +31,7 @@ function NewProjectPage() {
 
       showToast('Project created successfully!');
       console.log('Project created:', response.data);
-      const projectName = response.data._doc.name;
+      const projectName = response.data.name;
       router.push(`/projects/${projectName}`);
       
     } catch (err: any) {

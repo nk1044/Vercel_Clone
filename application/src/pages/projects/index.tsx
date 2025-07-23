@@ -5,6 +5,7 @@ import { showToast } from "@/components/tools/toast";
 import axios from 'axios';
 import { useSession } from "next-auth/react";
 import {Github, Link, CircleSmall, Plus} from 'lucide-react';
+import { parseUrl } from '@/lib/config/urlParser';
 
 function ProjectsPage() {
     const router = useRouter();
@@ -109,12 +110,12 @@ function ProjectsPage() {
                                                     </h3>
                                                     <div className="flex items-center gap-4 pl-1 text-sm">
                                                         <a
-                                                            href={`http://${project.name}.localhost:3000`}
+                                                            href={`http://${parseUrl(project.name)}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-blue-600 hover:text-blue-500 transition-colors flex items-center gap-1"
                                                         >
-                                                            <Link className="w-4"/> {project.name}.localhost:3000
+                                                            <Link className="w-4"/> {parseUrl(project.name)}
                                                         </a>
                                                         <a
                                                             href={project.URL}
