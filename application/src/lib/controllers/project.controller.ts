@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import { NextApiRequest, NextApiResponse } from "next";
 import { Project } from "../models/project.model";
 import { User } from "../models/user.model";
 import { Redis } from "ioredis";
 import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
-import { stat } from "fs";
+import { NextApiRequestWithSession } from "../config/types";
 
 
 const redis = new Redis(process.env.REDIS_URI as string);
@@ -53,7 +53,7 @@ const checkBuilderServer = async () => {
     }
 }
 
-const CreateNewProject = async (req: any, res: any) => {
+const CreateNewProject = async (req:NextApiRequestWithSession, res: NextApiResponse) => {
     try {
         const { gitUrl, projectId } = req.body;
         const projectID = projectId ? projectId.toString().trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_') : uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] });
@@ -91,7 +91,7 @@ const CreateNewProject = async (req: any, res: any) => {
     }
 }
 
-const GetCurrentProjectStatus = async function (req: any, res: any) {
+const GetCurrentProjectStatus = async function (req:NextApiRequestWithSession, res: NextApiResponse) {
     try {
         const STATUS_MESSAGES: Record<string, string> = {
             Pending: "Project is in queue and will start soon.",
@@ -170,7 +170,7 @@ const UpdateProjectStatus = async function (message: string) {
     // console.log(`Project status updated: ${status}`);
 };
 
-const GetAllProjects = async function (req: any, res: any) {
+const GetAllProjects = async function (req:NextApiRequestWithSession, res: NextApiResponse) {
     try {
         const user = req.session?.user;
         if (!user || !user.email) {
@@ -198,7 +198,7 @@ const GetAllProjects = async function (req: any, res: any) {
     }
 }
 
-const GetProjectByName = async function (req: any, res: any) {
+const GetProjectByName = async function (req:NextApiRequestWithSession, res: NextApiResponse) {
     try {
         const { name } = req.query;
         if (!name) {

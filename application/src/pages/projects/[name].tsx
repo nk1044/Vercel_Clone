@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, JSX } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { showToast } from '@/components/tools/toast';
@@ -20,7 +20,7 @@ interface LogData {
     message: string;
 }
 
-function index() {
+function Index() {
     const router = useRouter();
     const { name } = router.query;
     const [loading, setLoading] = useState(true);
@@ -384,4 +384,4 @@ function index() {
     )
 }
 
-export default index;
+export default Index;

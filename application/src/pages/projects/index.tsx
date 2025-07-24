@@ -7,13 +7,21 @@ import { useSession } from "next-auth/react";
 import {Github, Link, CircleSmall, Plus} from 'lucide-react';
 import { parseUrl } from '@/lib/config/urlParser';
 
+interface Project {
+    _id: string;
+    name: string;
+    URL: string;
+    status: string;
+    createdAt: string;
+}
+
 function ProjectsPage() {
     const router = useRouter();
-    const { data: session, status } = useSession();
+    const {status } = useSession();
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [projects, setProjects] = useState<any[]>([]);
+    const [projects, setProjects] = useState<Project[]>([]);
 
     useEffect(() => {
         if (status === 'unauthenticated') {

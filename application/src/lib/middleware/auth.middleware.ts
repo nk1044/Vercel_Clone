@@ -1,10 +1,13 @@
-// lib/withAuth.ts
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
+import { NextApiResponse } from "next";
+import type { NextApiRequestWithSession } from "@/lib/config/types";
 
-export function withAuth(handler: NextApiHandler) {
-  return async (req: NextApiRequest, res: NextApiResponse) => {
+
+export function withAuth(
+  handler: (req: NextApiRequestWithSession, res: NextApiResponse) => Promise<void> | void
+) {
+  return async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const session = await getServerSession(req, res, authOptions);
 
     if (!session) {
@@ -13,9 +16,7 @@ export function withAuth(handler: NextApiHandler) {
       });
     }
 
-    // @ts-ignore - pass session to handler if needed
     req.session = session;
-    
     return handler(req, res);
   };
 }

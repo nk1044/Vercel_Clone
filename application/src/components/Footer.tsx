@@ -1,6 +1,8 @@
-import React from 'react'
+import React from 'react';
+import { useRouter } from 'next/navigation';
 
 function Footer() {
+    const router = useRouter();
     return (
         <footer className="backdrop-blur-sm">
             <div className="max-w-7xl mx-auto px-6 py-8">
@@ -21,9 +23,10 @@ function Footer() {
 
                     {/* Center - Navigation Links */}
                     <div className="flex flex-wrap gap-6 text-sm">
-                        <a href="/docs" className="text-gray-400 hover:text-white transition-colors">
+                        <button className="text-gray-400 hover:text-white transition-colors"
+                        onClick={() => router.push('/docs')}>
                             Documentation
-                        </a>
+                        </button>
                         
                     </div>
 

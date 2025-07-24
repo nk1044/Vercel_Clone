@@ -15,7 +15,7 @@ const loginUser = async (email: string, name: string, avatar:string) => {
                     avatar: existingUser.avatar
             };
         }
-        const newUser = await User.create({ email, name });
+        const newUser = await User.create({ email, name, avatar });
         return {
                 _id: newUser._id,
                 name: newUser.name,

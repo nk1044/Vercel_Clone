@@ -1,7 +1,6 @@
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { useSession, signIn, signOut } from "next-auth/react";
-import { CircleUserRound } from 'lucide-react';
+import { useSession, signOut } from "next-auth/react";
 
 function Navbar() {
 

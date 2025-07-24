@@ -31,7 +31,8 @@ app.get('/*', (req, res) => {
 
 
 
-const redis = new Redis(String(process.env.REDIS_URL));
+// const redis = new Redis(String(process.env.REDIS_URL));
+const redis = new Redis(`rediss://red-cth8ph9opnds73b0fl00:EvLtEY838xpPxd58GYJLnZhmMLXOGxmY@singapore-redis.render.com:6379/0`);
 const publisher = new Redis(String(process.env.REDIS_URL));
 
 
@@ -115,20 +116,20 @@ async function PopFromQueue() {
             // Wait for data with a timeout of 1 second
             const result = await redis.brpop("user-list", 0);
             if (!result) {
-                // console.log("Queue is empty, retrying...");
+                console.log("Queue is empty, retrying...");
                 continue;
             }
 
             const [queueName, value] = result;
 
-            // console.log("Data popped from queue:", value);
+            console.log("Data popped from queue:", value);
 
             if (value) {
                 const data = JSON.parse(value);
                 publishMessage(`${data.projectId}+Downloading`);
-                // console.log("Processing Data:");
+                console.log("Processing Data:");
                 await gitUrlClone(data);
-                // console.log("Data Processed");
+                console.log("Data Processed");
             }
         } catch (error) {
             // console.error("Error popping from queue:", error);
