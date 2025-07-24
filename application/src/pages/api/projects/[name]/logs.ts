@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiResponse } from "next";
 import { connectDB } from "@/lib/config/db";
 import { GetCurrentProjectStatus } from "@/lib/controllers/project.controller";
 import { withAuth } from "@/lib/middleware/auth.middleware";

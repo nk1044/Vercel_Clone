@@ -7,7 +7,7 @@ import ProjectLayout from '@/components/Layout';
 
 function NewProjectPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const {status } = useSession();
 
   const [gitUrl, setGitUrl] = useState('');
   const [projectId, setProjectId] = useState('');

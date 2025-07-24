@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import { Project } from "../models/project.model";
 import { User } from "../models/user.model";
 import { Redis } from "ioredis";
@@ -248,5 +248,6 @@ export {
     GetCurrentProjectStatus,
     GetAllProjects,
     GetProjectByName,
+    UpdateProjectStatus,
     // subscribeToChannel
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, JSX } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { showToast } from '@/components/tools/toast';
@@ -49,6 +49,7 @@ function Index() {
             pollingRef.current
         ) {
             try {
+                console.log(count);
                 currentCount++;
                 setCount(currentCount);
                 
@@ -153,10 +154,15 @@ function Index() {
         return () => {
             pollingRef.current = false;
         };
-    }, [name]);
+    }, []);
 
     return (
         <div className='min-h-screen w-full'>
+            {error && (
+                <div className="text-red-500 text-center mt-4">
+                    <p>{error}</p>  
+                </div>
+            )}
             <ProjectLayout>
                 <div className="w-full min-h-[90%] p-8">
                     {!loading && projectData && status ? (
